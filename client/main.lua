@@ -27,7 +27,7 @@ RegisterCommand(Config.ComandoAtivar, function(source, args, rawCommand)
         end
     end
 
-	if autorizado then
+    if autorizado then
         if not activo then
             activo = true
             local coords = GetEntityCoords(PlayerPedId())
