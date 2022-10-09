@@ -19,7 +19,15 @@ AddEventHandler('esx:setJob', function(job)
 end)
 
 RegisterCommand(Config.ComandoAtivar, function(source, args, rawCommand)
-	if ESX.PlayerData.job.name == Config.Job then
+    local autorizado = false
+
+    for i=1, #Config.Jobs, 1 do
+        if ESX.PlayerData.job.name == Config.Jobs[i][1] then
+            autorizado = true
+        end
+    end
+
+	if autorizado then
         if not activo then
             activo = true
             local coords = GetEntityCoords(PlayerPedId())
@@ -36,7 +44,15 @@ RegisterCommand(Config.ComandoAtivar, function(source, args, rawCommand)
 end)
 
 RegisterCommand(Config.ComandoDesativar, function(source, args, rawCommand)
-	if ESX.PlayerData.job.name == Config.Job then
+	local autorizado = false
+
+    for i=1, #Config.Jobs, 1 do
+        if ESX.PlayerData.job.name == Config.Jobs[i][1] then
+            autorizado = true
+        end
+    end
+    
+    if autorizado then
         if activo then
             activo = false
             RemoveBlip(blip)
