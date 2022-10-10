@@ -18,6 +18,32 @@ AddEventHandler('esx:setJob', function(job)
     ESX.PlayerData.job = job
 end)
 
+RegisterNetEvent('zcmg_zonaacidente:blipremove')
+AddEventHandler('zcmg_zonaacidente:blipremove', function()
+    if activo then
+        activo = false
+        RemoveBlip(blip)
+        RemoveBlip(blip2)
+        exports['zcmg_notificacao']:Alerta("POLICIA", "Zona de acidente concluida!", 5000, 'sucesso')
+    else
+        exports['zcmg_notificacao']:Alerta("POLICIA", "Não está definida nenhuma zona de acidente!", 5000, 'aviso')
+    end
+end)
+
+RegisterNetEvent('zcmg_zonaacidente:blipcreate')
+AddEventHandler('zcmg_zonaacidente:blipcreate', function()
+    if not activo then
+        activo = true
+        local coords = GetEntityCoords(PlayerPedId())
+
+        CreateBlip(coords, 4, 1, 0.7)
+        CreateBlip2(coords, "Zona de Acidente", 380, 1, 0.7)
+        exports['zcmg_notificacao']:Alerta("POLICIA", "Zona de acidente criada!", 5000, 'sucesso')
+    else
+        exports['zcmg_notificacao']:Alerta("POLICIA", "A zona de acidente já está activa!", 5000, 'erro')
+    end
+end)
+
 RegisterCommand(Config.ComandoAtivar, function(source, args, rawCommand)
     local autorizado = false
 
@@ -27,17 +53,8 @@ RegisterCommand(Config.ComandoAtivar, function(source, args, rawCommand)
         end
     end
 
-    if autorizado then
-        if not activo then
-            activo = true
-            local coords = GetEntityCoords(PlayerPedId())
-
-            CreateBlip(coords, 4, 1, 0.7)
-            CreateBlip2(coords, "Zona de Acidente", 380, 1, 0.7)
-            exports['zcmg_notificacao']:Alerta("POLICIA", "Zona de acidente criada!", 5000, 'sucesso')
-        else
-            exports['zcmg_notificacao']:Alerta("POLICIA", "A zona de acidente já está activa!", 5000, 'erro')
-        end
+	if autorizado then
+        TriggerServerEvent("zcmg_zonaacidente:blipcreate")
     else
         exports['zcmg_notificacao']:Alerta("POLICIA", "Não tens permissões para realizar este comando", 5000, 'erro')
     end
@@ -53,14 +70,7 @@ RegisterCommand(Config.ComandoDesativar, function(source, args, rawCommand)
     end
     
     if autorizado then
-        if activo then
-            activo = false
-            RemoveBlip(blip)
-            RemoveBlip(blip2)
-            exports['zcmg_notificacao']:Alerta("POLICIA", "Zona de acidente concluida!", 5000, 'sucesso')
-        else
-            exports['zcmg_notificacao']:Alerta("POLICIA", "Não está definida nenhuma zona de acidente!", 5000, 'aviso')
-        end
+        TriggerServerEvent("zcmg_zonaacidente:blipremove")
     else
         exports['zcmg_notificacao']:Alerta("POLICIA", "Não tens permissões para realizar este comando", 5000, 'erro')
     end
