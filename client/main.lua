@@ -32,8 +32,7 @@ end)
 
 
 RegisterNetEvent('zcmg_zonaacidente:blipcreate')
-AddEventHandler('zcmg_zonaacidente:blipcreate', function()
-    local coords = GetEntityCoords(PlayerPedId())
+AddEventHandler('zcmg_zonaacidente:blipcreate', function(coords)
     CreateBlip(coords, 4, 1, 0.7)
     CreateBlip2(coords, "Zona de Acidente", 380, 1, 0.7)
     TriggerServerEvent('zcmg_zonaacidente:coords', coords)
@@ -58,7 +57,8 @@ RegisterCommand(Config.ComandoAtivar, function(source, args, rawCommand)
         end
 
         if autorizado then
-            TriggerServerEvent("zcmg_zonaacidente:blipcreate", args[1])
+            local coords = GetEntityCoords(PlayerPedId())
+            TriggerServerEvent("zcmg_zonaacidente:blipcreate", args[1], coords)
         else
             exports['zcmg_notificacao']:Alerta("POLICIA", "Não tens permissões para realizar este comando", 5000, 'erro')
         end
